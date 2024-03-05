@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <stdlib.h>
+const int sbox[4][4] = {
+    {1, 0, 3, 2},
+    {3, 2, 1, 0},
+    {0, 2, 1, 3},
+    {3, 1, 3, 2}};
+void encrypt_sdes(unsigned char *plaintext, unsigned char *ciphertext, unsigned char *key, unsigned char *iv);
+void decrypt_sdes(unsigned char *ciphertext, unsigned char *plaintext, unsigned char *key, unsigned char *iv);
+int main() {
+    unsigned char plaintext[8], key[10], iv[8];
+    printf("Enter 8-bit plaintext (binary): ");
+    scanf("%s", plaintext);
+    printf("Enter 10-bit key (binary): ");
+    scanf("%s", key);
+    printf("Enter 8-bit initialization vector (binary): ");
+    scanf("%s", iv);
+    unsigned char ciphertext[8];
+    unsigned char decrypted_text[8];
+    encrypt_sdes(plaintext, ciphertext, key, iv);
+    decrypt_sdes(ciphertext, decrypted_text, key, iv);
+    printf("Encrypted ciphertext: %s\n", ciphertext);
+    printf("Decrypted plaintext: %s\n", decrypted_text);
+    return 0;
+}
+void encrypt_sdes(unsigned char *plaintext, unsigned char *ciphertext, unsigned char *key, unsigned char *iv) {
+    for (int i = 0; i < 8; i++) {
+        plaintext[i] = plaintext[i] ^ iv[i];
+    }
+    for (int i = 0; i < 8; i++) {
+        ciphertext[i] = plaintext[i];
+    }
+}
+void decrypt_sdes(unsigned char *ciphertext, unsigned char *plaintext, unsigned char *key, unsigned char *iv) {
+    for (int i = 0; i < 8; i++) {
+        plaintext[i] = ciphertext[i];
+    }
+    for (int i = 0; i < 8; i++) {
+        plaintext[i] = plaintext[i] ^ iv[i];
+    }
+}
