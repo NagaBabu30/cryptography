@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include <stdlib.h>
+const int sbox[4][4] = {
+    {1, 0, 3, 2},
+    {3, 2, 1, 0},
+    {0, 2, 1, 3},
+    {3, 1, 3, 2}};
+void encrypt_sdes(unsigned char *plaintext, unsigned char *ciphertext, unsigned char *key, unsigned char *counter);
+void decrypt_sdes(unsigned char *ciphertext, unsigned char *plaintext, unsigned char *key, unsigned char *counter);
+int main() {
+    unsigned char plaintext[24], key[10];
+    printf("Enter 24-bit plaintext (binary): ");
+    scanf("%s", plaintext);
+    printf("Enter 10-bit key (binary): ");
+    scanf("%s", key);
+    unsigned char counter[8] = {0};
+    unsigned char ciphertext[24];
+    unsigned char decrypted_text[24];
+    encrypt_sdes(plaintext, ciphertext, key, counter);
+    decrypt_sdes(ciphertext, decrypted_text, key, counter);
+    printf("Encrypted ciphertext: %s\n", ciphertext);
+    printf("Decrypted plaintext: %s\n", decrypted_text);
+    return 0;
+}
+void encrypt_sdes(unsigned char *plaintext, unsigned char *ciphertext, unsigned char *key, unsigned char *counter) {
+    for (int i = 0; i < 24; i++) {
+        ciphertext[i] = plaintext[i];
+    }
+}
+void decrypt_sdes(unsigned char *ciphertext, unsigned char *plaintext, unsigned char *key, unsigned char *counter) {
+    for (int i = 0; i < 24; i++) {
+        plaintext[i] = ciphertext[i];
+    }
+}
