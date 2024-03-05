@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <string.h>
+#define BLOCK_SIZE 16
+void encrypt_ecb(const unsigned char *plaintext, unsigned char *ciphertext, int size, const unsigned char *key);
+void decrypt_ecb(const unsigned char *ciphertext, unsigned char *plaintext, int size, const unsigned char *key);
+int main() {
+    unsigned char plaintext[] = "security";
+    unsigned char key[] = "network";
+    unsigned char ciphertext[strlen((char *)plaintext)];
+    unsigned char decrypted_text[strlen((char *)plaintext)];
+    encrypt_ecb(plaintext, ciphertext, strlen((char *)plaintext), key);
+    decrypt_ecb(ciphertext, decrypted_text, strlen((char *)plaintext), key);
+    printf("Original plaintext: %s\n", plaintext);
+    printf("Encrypted ciphertext: %s\n", ciphertext);
+    printf("Decrypted plaintext: %s\n", decrypted_text);
+
+    return 0;
+}
+void encrypt_ecb(const unsigned char *plaintext, unsigned char *ciphertext, int size, const unsigned char *key) {
+    memcpy(ciphertext, plaintext, size); 
+}
+void decrypt_ecb(const unsigned char *ciphertext, unsigned char *plaintext, int size, const unsigned char *key) {
+    memcpy(plaintext, ciphertext, size); 
+}
