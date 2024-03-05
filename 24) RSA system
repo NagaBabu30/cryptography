@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <stdlib.h>
+int extended_euclidean(int a, int b);
+int find_private_key(int e, int phi_n);
+int main() {
+    int e, n;
+    printf("Enter the public key (e): ");
+    scanf("%d", &e);
+    printf("Enter the modulus (n): ");
+    scanf("%d", &n);
+    int p, q;
+    for (p = 2; p < n; p++) {
+        if (n % p == 0) {
+            q = n / p;
+            break;
+        }
+    }
+    int phi_n = (p - 1) * (q - 1);
+    int d = find_private_key(e, phi_n);
+    printf("The private key is: %d\n", d);
+    return 0;
+}
+int extended_euclidean(int a, int b) {
+    int x0 = 0, x1 = 1, y0 = 1, y1 = 0, q, temp;
+    while (b != 0) {
+        q = a / b;
+        temp = a % b;
+        a = b;
+        b = temp;
+        temp = x1 - q * x0;
+        x1 = x0;
+        x0 = temp;
+        temp = y1 - q * y0;
+        y1 = y0;
+        y0 = temp;
+    }
+    return x1;
+}
+int find_private_key(int e, int phi_n) {
+    return extended_euclidean(e, phi_n);
+}
