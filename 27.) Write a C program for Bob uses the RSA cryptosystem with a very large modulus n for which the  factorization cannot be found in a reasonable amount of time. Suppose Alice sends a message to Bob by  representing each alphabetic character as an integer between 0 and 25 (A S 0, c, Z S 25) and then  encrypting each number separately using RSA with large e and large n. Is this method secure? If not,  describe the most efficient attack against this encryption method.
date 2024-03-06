@@ -1,0 +1,59 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+int gcd(int a, int b) {
+    if (b == 0)
+        return a;
+    return gcd(b, a % b);
+}
+void generateKeys(int p, int q, int *e, int *d, int *n) {
+    int phi = (p - 1) * (q - 1);
+    *n = p * q;
+    *e = 65537; 
+    *d = 1;
+    while (((*d) * (*e)) % phi != 1) {
+        (*d)++;
+    }
+}
+int encrypt(int m, int e, int n) {
+    int c = 1;
+    for (int i = 0; i < e; i++) {
+        c = (c * m) % n;
+    }
+    return c;
+}
+int decrypt(int c, int d, int n) {
+    int m = 1;
+    for (int i = 0; i < d; i++) {
+        m = (m * c) % n;
+    }
+    return m;
+}
+int main() {
+    int p, q, e, d, n;
+    char message[100];
+    int encrypted[100], decrypted[100];
+    printf("Enter two prime numbers (p and q): ");
+    scanf("%d %d", &p, &q);
+    printf("Enter your message (only alphabetic characters): ");
+    scanf("%s", message);
+    generateKeys(p, q, &e, &d, &n);
+    printf("Encrypted message: ");
+    for (int i = 0; i < strlen(message); i++) {
+        int m = message[i] - 'A'; 
+        int c = encrypt(m, e, n);
+        encrypted[i] = c;
+        printf("%d ", c);
+    }
+    printf("\n");
+    printf("Decrypted message: ");
+    for (int i = 0; i < strlen(message); i++) {
+        int c = encrypted[i];
+        int m = decrypt(c, d, n);
+        decrypted[i] = m;
+        printf("%c", m + 'A'); 
+    }
+    printf("\n");
+    return 0;
+}
