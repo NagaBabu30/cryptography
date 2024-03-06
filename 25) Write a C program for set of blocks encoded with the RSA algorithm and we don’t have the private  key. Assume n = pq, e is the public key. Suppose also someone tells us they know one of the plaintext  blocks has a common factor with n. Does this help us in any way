@@ -1,0 +1,28 @@
+#include <stdio.h>
+int hasCommonFactor(int a, int b) {
+    while (b != 0) {
+        int temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a != 1;
+}
+int main() {
+    int n, e;
+    printf("Enter n (modulus): ");
+    scanf("%d", &n);
+    printf("Enter e (public exponent): ");
+    scanf("%d", &e);
+    int num_blocks;
+    printf("Enter the number of ciphertext blocks: ");
+    scanf("%d", &num_blocks);
+    printf("Enter ciphertext blocks:\n");
+    for (int i = 0; i < num_blocks; ++i) {
+        int ciphertext;
+        scanf("%d", &ciphertext);
+        if (hasCommonFactor(ciphertext, n)) {
+            printf("Block %d has a common factor with n: %d\n", i+1, ciphertext);
+        }
+    }
+    return 0;
+}
