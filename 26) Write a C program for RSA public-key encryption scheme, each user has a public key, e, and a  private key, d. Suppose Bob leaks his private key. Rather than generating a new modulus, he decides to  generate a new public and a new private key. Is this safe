@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+int gcd(int a, int b) {
+    if (b == 0)
+        return a;
+    return gcd(b, a % b);
+}
+void generateKeys(int p, int q, int *e, int *d, int *n) {
+    int phi = (p - 1) * (q - 1);
+    *n = p * q;
+    *e = 2;
+    while (gcd(*e, phi) != 1) {
+        (*e)++;
+    }
+    *d = 1;
+    while (((*d) * (*e)) % phi != 1) {
+        (*d)++;
+    }
+}
+int encrypt(int m, int e, int n) {
+    int c = 1;
+    for (int i = 0; i < e; i++) {
+        c = (c * m) % n;
+    }
+    return c;
+}
+int decrypt(int c, int d, int n) {
+    int m = 1;
+    for (int i = 0; i < d; i++) {
+        m = (m * c) % n;
+    }
+    return m;
+}
+int main() {
+    int p, q, e, d, n;
+    int message, encrypted, decrypted;
+    printf("Enter two prime numbers (p and q): ");
+    scanf("%d %d", &p, &q);
+    printf("Enter your message to encrypt: ");
+    scanf("%d", &message);
+    generateKeys(p, q, &e, &d, &n);
+    encrypted = encrypt(message, e, n);
+    printf("Encrypted message: %d\n", encrypted);
+    decrypted = decrypt(encrypted, d, n);
+    printf("Decrypted message: %d\n", decrypted);
+    printf("If Bob's private key is leaked, he generates new public and private keys.\n");
+    generateKeys(p, q, &e, &d, &n);
+    printf("New public key (e): %d\n", e);
+    printf("New private key (d): %d\n", d);
+    return 0;
+}
