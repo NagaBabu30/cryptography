@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <string.h>
+
+#define BLOCK_SIZE 16 
+
+void cbcMac(const unsigned char *key, const unsigned char *message, unsigned char *mac);
+
+int main() {
+    unsigned char key[BLOCK_SIZE] = {0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7, 0x97, 0x76, 0x46, 0x6c, 0x91, 0x27};
+    unsigned char message[BLOCK_SIZE] = "Hello, World!";
+    unsigned char mac[BLOCK_SIZE];
+    cbcMac(key, message, mac);
+    printf("MAC for one-block message: ");
+    for (int i = 0; i < BLOCK_SIZE; ++i) {
+        printf("%02x ", mac[i]);
+    }
+    printf("\n");
+    unsigned char twoBlockMessage[BLOCK_SIZE * 2];
+    memcpy(twoBlockMessage, message, BLOCK_SIZE);
+    for (int i = 0; i < BLOCK_SIZE; ++i) {
+        twoBlockMessage[i + BLOCK_SIZE] ^= mac[i]; // X ? T
+    }
+    cbcMac(key, twoBlockMessage, mac);
+
+    // Print MAC for two-block message
+    printf("MAC for two-block message: ");
+    for (int i = 0; i < BLOCK_SIZE; ++i) {
+        printf("%02x ", mac[i]);
+    }
+    printf("\n");
+
+    return 0;
+}
+
+void cbcMac(const unsigned char *key, const unsigned char *message, unsigned char *mac) {
+    memcpy(mac, message, BLOCK_SIZE); 
+    for (int i = 0; i < BLOCK_SIZE; ++i) {
+        mac[i] ^= key[i]; 
+    }
+}
