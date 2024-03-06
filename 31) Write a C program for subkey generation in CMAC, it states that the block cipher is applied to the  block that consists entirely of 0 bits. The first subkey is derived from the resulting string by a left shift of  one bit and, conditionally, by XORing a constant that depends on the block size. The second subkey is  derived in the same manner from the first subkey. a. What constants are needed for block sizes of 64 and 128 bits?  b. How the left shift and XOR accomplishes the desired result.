@@ -1,0 +1,47 @@
+#include <stdio.h>
+
+#define BLOCK_SIZE_64 8 
+#define BLOCK_SIZE_128 16 
+
+void generateSubKeys(const unsigned char *block, int blockSize);
+
+int main() {
+    unsigned char block_64[BLOCK_SIZE_64] = {0}; 
+    unsigned char block_128[BLOCK_SIZE_128] = {0}; 
+    
+    printf("Subkeys for block size 64:\n");
+    generateSubKeys(block_64, BLOCK_SIZE_64);
+
+    printf("\nSubkeys for block size 128:\n");
+    generateSubKeys(block_128, BLOCK_SIZE_128);
+
+    return 0;
+}
+
+void generateSubKeys(const unsigned char *block, int blockSize) {
+    printf("Block: ");
+    for (int i = 0; i < blockSize; ++i) {
+        printf("%02x ", block[i]);
+    }
+    printf("\n");
+    unsigned char subkey[blockSize];
+    for (int i = 0; i < blockSize - 1; ++i) {
+        subkey[i] = (block[i] << 1) | (block[i + 1] >> 7);
+    }
+    subkey[blockSize - 1] = block[blockSize - 1] << 1;
+    unsigned char constant = 0x87; 
+    if (blockSize == BLOCK_SIZE_64) {
+        constant = 0x1b; // 
+    }
+
+    for (int i = 0; i < blockSize; ++i) {
+        subkey[i] ^= constant;
+    }
+
+    // Print subkey
+    printf("Subkey: ");
+    for (int i = 0; i < blockSize; ++i) {
+        printf("%02x ", subkey[i]);
+    }
+    printf("\n");
+}
